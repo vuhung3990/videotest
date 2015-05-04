@@ -1,15 +1,12 @@
 package com.example.videodemo;
 
-import android.support.v7.app.ActionBarActivity;
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.provider.MediaStore.Audio;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.VideoView;
@@ -26,25 +23,32 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // play video
         video = (VideoView) findViewById(R.id.video);
-        volume = (VerticalSeekBar) findViewById(R.id.volume);
         video.setVideoPath("/storage/external_SD/Video/test.mp4");
         video.start();
         
+        volume = (VerticalSeekBar) findViewById(R.id.volume);
+        
+        MediaController controller = new MediaController(this);
+        controller.setAnchorView(video.getRootView());
+        video.setMediaController(controller);
+        
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        
+        // set max progress
         volume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        
+        // set current volume
+        volume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
         volume.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
